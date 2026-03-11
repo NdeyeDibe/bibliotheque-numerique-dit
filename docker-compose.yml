@@ -1,0 +1,125 @@
+services:
+
+  # ================================
+  # BASE DE DONNÉES LIVRES
+  # ================================
+  db-livres:
+    image: postgres:17
+    container_name: db-livres
+    environment:
+      POSTGRES_DB: db_livres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - data-livres:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d db_livres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # BASE DE DONNÉES UTILISATEURS
+  # ================================
+  db-utilisateurs:
+    image: postgres:17
+    container_name: db-utilisateurs
+    environment:
+      POSTGRES_DB: db_utilisateurs
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - data-utilisateurs:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d db_utilisateurs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # BASE DE DONNÉES EMPRUNTS
+  # ================================
+  db-emprunts:
+    image: postgres:17
+    container_name: db-emprunts
+    environment:
+      POSTGRES_DB: db_emprunts
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - data-emprunts:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d db_emprunts"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # MICROSERVICE LIVRES
+  # ================================
+  service-livres:
+    build: ./backend/livres
+    container_name: service-livres
+    environment:
+      DATABASE_URL: postgresql://admin:admin123@db-livres:5432/db_livres
+    ports:
+      - "8001:8000"
+    depends_on:
+      db-livres:
+        condition: service_healthy
+    restart: always
+
+  # ================================
+  # MICROSERVICE UTILISATEURS
+  # ================================
+  service-utilisateurs:
+    build: ./backend/utilisateurs
+    container_name: service-utilisateurs
+    environment:
+      DATABASE_URL: postgresql://admin:admin123@db-utilisateurs:5432/db_utilisateurs
+    ports:
+      - "8002:8000"
+    depends_on:
+      db-utilisateurs:
+        condition: service_healthy
+    restart: always
+
+  # ================================
+  # MICROSERVICE EMPRUNTS
+  # ================================
+  service-emprunts:
+    build: ./backend/emprunts
+    container_name: service-emprunts
+    environment:
+      DATABASE_URL: postgresql://admin:admin123@db-emprunts:5432/db_emprunts
+    ports:
+      - "8003:8000"
+    depends_on:
+      db-emprunts:
+        condition: service_healthy
+    restart: always
+
+  # ================================
+  # FRONTEND REACT
+  # ================================
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - service-livres
+      - service-utilisateurs
+      - service-emprunts
+    restart: always
+
+# ================================
+# VOLUMES
+# ================================
+volumes:
+  data-livres:
+  data-utilisateurs:
+  data-emprunts:
