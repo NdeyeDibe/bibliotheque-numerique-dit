@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RefreshCw, Plus, Clock, CheckCircle, AlertCircle, RotateCcw } from 'lucide-react';
 import { empruntService } from '../services/empruntService';
 
 function EmpruntsPage() {
@@ -45,15 +46,14 @@ function EmpruntsPage() {
 
   const getStatutBadge = (statut) => {
     const config = {
-      en_cours: { label: 'En cours', color: '#e0faf5', text: '#00875a', dot: '#00c9a7' },
-      retourne: { label: 'Retourné', color: '#f0fdf4', text: '#16a34a', dot: '#22c55e' },
-      en_retard: { label: 'En retard', color: '#fff0f0', text: '#dc2626', dot: '#ef4444' }
+      en_cours:  { label: 'En cours',  icon: <Clock size={13} />,         color: '#e0faf5', text: '#00875a' },
+      retourne:  { label: 'Retourné',  icon: <CheckCircle size={13} />,   color: '#f0fdf4', text: '#16a34a' },
+      en_retard: { label: 'En retard', icon: <AlertCircle size={13} />,   color: '#fff0f0', text: '#dc2626' }
     };
-    const c = config[statut] || { label: statut, color: '#f1f5f9', text: '#475569', dot: '#94a3b8' };
+    const c = config[statut] || { label: statut, icon: null, color: '#f1f5f9', text: '#475569' };
     return (
-      <span style={{ background: c.color, color: c.text, padding: '5px 12px', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-        <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: c.dot, display: 'inline-block' }}></span>
-        {c.label}
+      <span style={{ background: c.color, color: c.text, padding: '5px 12px', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+        {c.icon} {c.label}
       </span>
     );
   };
@@ -66,33 +66,40 @@ function EmpruntsPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h2>🔄 Gestion des Emprunts</h2>
-        <button className="btn-primary" onClick={() => setShowForm(true)}>+ Nouvel Emprunt</button>
+        <h2><RefreshCw size={28} strokeWidth={2} /> Gestion des Emprunts</h2>
+        <button className="btn-primary" onClick={() => setShowForm(true)}>
+          <Plus size={16} style={{marginRight:'6px', verticalAlign:'middle'}} />
+          Nouvel Emprunt
+        </button>
       </div>
 
       {showForm && (
         <div className="modal">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="modal-header-icon">🔄</div>
+              <div className="modal-header-icon"><RefreshCw size={20} color="#00c9a7" /></div>
               <h3>Nouvel emprunt</h3>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="form-label">ID du Livre</label>
-                <input placeholder="Ex: 1" type="number" value={formData.livre_id} onChange={(e) => setFormData({...formData, livre_id: e.target.value})} required />
+                <input placeholder="Ex: 1" type="number" value={formData.livre_id}
+                  onChange={(e) => setFormData({...formData, livre_id: e.target.value})} required />
               </div>
               <div className="form-group">
                 <label className="form-label">ID de l'Utilisateur</label>
-                <input placeholder="Ex: 1" type="number" value={formData.utilisateur_id} onChange={(e) => setFormData({...formData, utilisateur_id: e.target.value})} required />
+                <input placeholder="Ex: 1" type="number" value={formData.utilisateur_id}
+                  onChange={(e) => setFormData({...formData, utilisateur_id: e.target.value})} required />
               </div>
               <div className="form-group">
                 <label className="form-label">Date de retour prévue</label>
-                <input type="date" value={formData.date_retour_prevue} onChange={(e) => setFormData({...formData, date_retour_prevue: e.target.value})} required />
+                <input type="date" value={formData.date_retour_prevue}
+                  onChange={(e) => setFormData({...formData, date_retour_prevue: e.target.value})} required />
               </div>
               <div className="form-actions">
                 <button type="submit" className="btn-primary">Sauvegarder</button>
-                <button type="button" className="btn-secondary" onClick={() => setShowForm(false)}>Annuler</button>
+                <button type="button" className="btn-secondary"
+                  onClick={() => setShowForm(false)}>Annuler</button>
               </div>
             </form>
           </div>
@@ -125,7 +132,8 @@ function EmpruntsPage() {
                   <td>
                     {emprunt.statut === 'en_cours' && (
                       <button className="btn-return" onClick={() => handleRetour(emprunt.id)}>
-                        ↩ Retourner
+                        <RotateCcw size={14} style={{marginRight:'5px', verticalAlign:'middle'}} />
+                        Retourner
                       </button>
                     )}
                   </td>

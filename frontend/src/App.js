@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { BookOpen, Users, RefreshCw } from 'lucide-react';
 import LivresPage from './pages/LivresPage';
 import UtilisateursPage from './pages/UtilisateursPage';
 import EmpruntsPage from './pages/EmpruntsPage';
@@ -42,7 +43,6 @@ function HeroBanner() {
 
 function AppLayout() {
   const location = useLocation();
-  const isHome = true;
   return (
     <div className="app">
       <nav className="navbar">
@@ -52,12 +52,18 @@ function AppLayout() {
           <span className="navbar-title">Bibliothèque Numérique</span>
         </div>
         <div className="navbar-links">
-          <NavLink to="/livres" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>📚 Livres</NavLink>
-          <NavLink to="/utilisateurs" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>👥 Utilisateurs</NavLink>
-          <NavLink to="/emprunts" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>🔄 Emprunts</NavLink>
+          <NavLink to="/livres" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            <BookOpen size={17} /> Livres
+          </NavLink>
+          <NavLink to="/utilisateurs" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            <Users size={17} /> Utilisateurs
+          </NavLink>
+          <NavLink to="/emprunts" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            <RefreshCw size={17} /> Emprunts
+          </NavLink>
         </div>
       </nav>
-      {isHome && <HeroBanner />}
+      <HeroBanner />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<LivresPage />} />
