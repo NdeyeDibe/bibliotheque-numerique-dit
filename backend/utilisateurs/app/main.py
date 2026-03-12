@@ -38,6 +38,15 @@ def read_utilisateur(utilisateur_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Utilisateur introuvable")
     return db_utilisateur
 
+# Consulter le profil d'un utilisateur
+@app.get("/api/utilisateurs/{utilisateur_id}/profil", response_model=schemas.Utilisateur)
+def get_profil(utilisateur_id: int, db: Session = Depends(get_db)):
+    db_utilisateur = crud.get_utilisateur(db, utilisateur_id)
+    if db_utilisateur is None:
+        raise HTTPException(status_code=404, detail="Utilisateur introuvable")
+    return db_utilisateur
+
+
 # Créer un utilisateur
 @app.post("/api/utilisateurs/", response_model=schemas.Utilisateur)
 def create_utilisateur(utilisateur: schemas.UtilisateurCreate, db: Session = Depends(get_db)):
@@ -62,11 +71,3 @@ def delete_utilisateur(utilisateur_id: int, db: Session = Depends(get_db)):
     if db_utilisateur is None:
         raise HTTPException(status_code=404, detail="Utilisateur introuvable")
     return {"message": "Utilisateur supprimé avec succès"}
-
-# Consulter le profil d'un utilisateur
-@app.get("/api/utilisateurs/{utilisateur_id}/profil", response_model=schemas.Utilisateur)
-def get_profil(utilisateur_id: int, db: Session = Depends(get_db)):
-    db_utilisateur = crud.get_utilisateur(db, utilisateur_id)
-    if db_utilisateur is None:
-        raise HTTPException(status_code=404, detail="Utilisateur introuvable")
-    return db_utilisateur
