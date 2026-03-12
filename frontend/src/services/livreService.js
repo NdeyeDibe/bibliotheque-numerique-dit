@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8001/api/livres/';
+const API_URL = '/api/livres/';
 
 export const livreService = {
   // Récupérer tous les livres

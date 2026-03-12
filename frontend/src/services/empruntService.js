@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8003/api/emprunts/';
+const API_URL = '/api/emprunts/';
 
 export const empruntService = {
   // Récupérer tous les emprunts
