@@ -30,6 +30,12 @@ def get_db():
 def read_livres(db: Session = Depends(get_db)):
     return crud.get_livres(db)
 
+# Rechercher des livres
+@app.get("/api/livres/search/", response_model=list[schemas.Livre])
+def search_livres(terme: str, db: Session = Depends(get_db)):
+    return crud.search_livres(db, terme)
+
+
 # Récupérer un livre par ID
 @app.get("/api/livres/{livre_id}", response_model=schemas.Livre)
 def read_livre(livre_id: int, db: Session = Depends(get_db)):
@@ -37,11 +43,6 @@ def read_livre(livre_id: int, db: Session = Depends(get_db)):
     if db_livre is None:
         raise HTTPException(status_code=404, detail="Livre introuvable")
     return db_livre
-
-# Rechercher des livres
-@app.get("/api/livres/search/", response_model=list[schemas.Livre])
-def search_livres(terme: str, db: Session = Depends(get_db)):
-    return crud.search_livres(db, terme)
 
 # Créer un livre
 @app.post("/api/livres/", response_model=schemas.Livre)
