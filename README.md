@@ -9,16 +9,19 @@ Plateforme web moderne de gestion de bibliothèque académique basée sur une ar
 
 ## 🏗️ Architecture
 ```
-Frontend React (port 3000)
+Navigateur (port 3000)
         │
-        ├── Microservice Livres (port 8001)
-        │       └── PostgreSQL db_livres
+        ▼
+    Nginx (reverse proxy)
         │
-        ├── Microservice Utilisateurs (port 8002)
-        │       └── PostgreSQL db_utilisateurs
+        ├── /api/livres/        → Microservice Livres (port 8001)
+        │                               └── PostgreSQL db_livres
         │
-        └── Microservice Emprunts (port 8003)
-                └── PostgreSQL db_emprunts
+        ├── /api/utilisateurs/  → Microservice Utilisateurs (port 8002)
+        │                               └── PostgreSQL db_utilisateurs
+        │
+        └── /api/emprunts/      → Microservice Emprunts (port 8003)
+                                        └── PostgreSQL db_emprunts
 ```
 
 ## 🛠️ Technologies
